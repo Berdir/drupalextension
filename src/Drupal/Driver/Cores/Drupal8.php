@@ -54,7 +54,6 @@ class Drupal8 implements CoreInterface {
     }
     // Bootstrap Drupal.
     chdir(DRUPAL_ROOT);
-    require_once DRUPAL_ROOT . '/core/vendor/autoload.php';
     require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
     $this->validateDrupalSite();
     $request = Request::createFromGlobals();
@@ -279,12 +278,10 @@ class Drupal8 implements CoreInterface {
         'port' => NULL,
       );
       $_SERVER['HTTP_HOST'] = $drupal_base_url['host'];
-
       if ($drupal_base_url['port']) {
         $_SERVER['HTTP_HOST'] .= ':' . $drupal_base_url['port'];
       }
       $_SERVER['SERVER_PORT'] = $drupal_base_url['port'];
-
       if (array_key_exists('path', $drupal_base_url)) {
         $_SERVER['PHP_SELF'] = $drupal_base_url['path'] . '/index.php';
       }
@@ -296,15 +293,13 @@ class Drupal8 implements CoreInterface {
       $_SERVER['HTTP_HOST'] = 'default';
       $_SERVER['PHP_SELF'] = '/index.php';
     }
-
     $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'] = $_SERVER['PHP_SELF'];
     $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     $_SERVER['REQUEST_METHOD']  = NULL;
-
     $_SERVER['SERVER_SOFTWARE'] = NULL;
     $_SERVER['HTTP_USER_AGENT'] = NULL;
-
-    $conf_path = conf_path(TRUE, TRUE);
+    $request = Request::createFromGlobals();
+    $conf_path = DrupalKernel::findSitePath($request);
     $conf_file = $this->drupalRoot . "/$conf_path/settings.php";
     if (!file_exists($conf_file)) {
       throw new BootstrapException(sprintf('Could not find a Drupal settings.php file at "%s"', $conf_file));
