@@ -52,7 +52,6 @@ class Drupal8 implements CoreInterface {
     if (!defined('DRUPAL_ROOT')) {
       define('DRUPAL_ROOT', $this->drupalRoot);
     }
-    var_dump($this->drupalRoot);
     // Bootstrap Drupal.
     chdir(DRUPAL_ROOT);
     $autoloader = require_once DRUPAL_ROOT . '/autoload.php';
