@@ -52,12 +52,13 @@ class Drupal8 implements CoreInterface {
     if (!defined('DRUPAL_ROOT')) {
       define('DRUPAL_ROOT', $this->drupalRoot);
     }
+    var_dump($this->drupalRoot);
     // Bootstrap Drupal.
     chdir(DRUPAL_ROOT);
-    require_once DRUPAL_ROOT . '/core/includes/bootstrap.inc';
+    $autoloader = require_once DRUPAL_ROOT . '/autoload.php';
     $this->validateDrupalSite();
     $request = Request::createFromGlobals();
-    $kernel = DrupalKernel::createFromRequest($request, \ComposerAutoloaderInitDrupal8::getLoader(), 'prod');
+    $kernel = DrupalKernel::createFromRequest($request, $autoloader, 'prod');
     $kernel->boot();
     $kernel->prepareLegacyRequest($request);
     // Initialise an anonymous session. required for the bootstrap.
